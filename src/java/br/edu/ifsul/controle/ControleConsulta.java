@@ -5,10 +5,12 @@ import br.edu.ifsul.dao.ConsultaDAO;
 import br.edu.ifsul.dao.ExameDAO;
 import br.edu.ifsul.dao.MedicoDAO;
 import br.edu.ifsul.dao.PacienteDAO;
+import br.edu.ifsul.dao.ReceituarioDAO;
 import br.edu.ifsul.modelo.Consulta;
 import br.edu.ifsul.modelo.Exame;
 import br.edu.ifsul.modelo.Medico;
 import br.edu.ifsul.modelo.Paciente;
+import br.edu.ifsul.modelo.Receituario;
 import br.edu.ifsul.util.Util;
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
@@ -34,11 +36,16 @@ public class ControleConsulta implements Serializable {
     private Exame exame;
     private ExameDAO<Exame> daoExame;
     
+    private Boolean novoDado2;
+    private Receituario receituario;
+    private ReceituarioDAO<Receituario> daoReceituario;
+    
     public ControleConsulta(){
         dao = new ConsultaDAO<>();
         daoMedico = new  MedicoDAO<>();
         daoPaciente = new PacienteDAO<>();
         daoExame = new ExameDAO<>();
+        daoReceituario = new ReceituarioDAO<>();
     }
     
     public void adicionarExame(){
@@ -66,6 +73,33 @@ public class ControleConsulta implements Serializable {
     public void removerExame(int index){
         getObjeto().getListaExames().remove(index);
         Util.mensagemInformacao("O exame foi removido com sucesso");
+    }
+    
+    public void adicionarReceituario(){
+        if(getReceituario()!= null){
+                getReceituario().setConsulta(getObjeto());
+                getObjeto().getListaReceituarios().add(getReceituario());
+                Util.mensagemInformacao("Receituario adicionado com sucesso");
+        }else{
+            System.out.println("Caiu aqui");
+        }
+    }
+    
+     public void novoReceituario(){
+        setReceituario(new Receituario());
+        System.out.println("novo receituario instanciado");
+        setNovoDado2((Boolean) true);
+    }
+    
+    public void alterarReceituario(int index){
+        setReceituario(getObjeto().getListaReceituarios().get(index));
+        getObjeto().removerReceituario(index);
+        setNovoDado2((Boolean) false);
+    }
+    
+    public void removerReceituario(int index){
+        getObjeto().getListaReceituarios().remove(index);
+        Util.mensagemInformacao("O receituario foi removido com sucesso");
     }
     
     public String listar(){
@@ -157,6 +191,30 @@ public class ControleConsulta implements Serializable {
 
     public void setDaoExame(ExameDAO<Exame> daoExame) {
         this.daoExame = daoExame;
+    }
+
+    public Boolean getNovoDado2() {
+        return novoDado2;
+    }
+
+    public void setNovoDado2(Boolean novoDado2) {
+        this.novoDado2 = novoDado2;
+    }
+
+    public Receituario getReceituario() {
+        return receituario;
+    }
+
+    public void setReceituario(Receituario receituario) {
+        this.receituario = receituario;
+    }
+
+    public ReceituarioDAO<Receituario> getDaoReceituario() {
+        return daoReceituario;
+    }
+
+    public void setDaoReceituario(ReceituarioDAO<Receituario> daoReceituario) {
+        this.daoReceituario = daoReceituario;
     }
     
     
